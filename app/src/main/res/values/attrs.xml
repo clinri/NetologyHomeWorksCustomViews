@@ -7,6 +7,7 @@
         <attr name="color2" format="color|reference"/>
         <attr name="color3" format="color|reference"/>
         <attr name="color4" format="color|reference"/>
+        <attr name="colorBack" format="color|reference"/>
 
     </declare-styleable>
 
