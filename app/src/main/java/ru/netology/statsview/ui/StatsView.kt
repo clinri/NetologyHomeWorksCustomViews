@@ -83,6 +83,8 @@ class StatsView @JvmOverloads constructor(
             return
         }
         var startAngle = -90F
+        val sumData = data.sum()
+        data = data.map { it / sumData }
         data.forEachIndexed { index, datum ->
             val angle = datum * 360F
             paint.color = colors.getOrElse(index) { generateRandomColor() }
