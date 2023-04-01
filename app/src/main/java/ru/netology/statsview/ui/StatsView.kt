@@ -27,6 +27,8 @@ class StatsView @JvmOverloads constructor(
     private var textSize = AndroidUtils.dp(context, 20).toFloat()
     private var lineWidth = AndroidUtils.dp(context, 5)
     private var colors = emptyList<Int>()
+    private var colorBack = 0
+    private var sumData = 0F
 
     init {
         context.withStyledAttributes(attributeSet, R.styleable.StatsView) {
@@ -38,12 +40,16 @@ class StatsView @JvmOverloads constructor(
                 getColor(R.styleable.StatsView_color3, generateRandomColor()),
                 getColor(R.styleable.StatsView_color4, generateRandomColor())
             )
+            colorBack = getColor(R.styleable.StatsView_colorBack, generateRandomColor())
         }
     }
 
     var data: List<Float> = emptyList()
         set(value) {
-            field = value
+            sumData = value[0]
+            field = value.filterIndexed(fun(index: Int, _) = index != 0).map {
+                it / sumData
+            }
             invalidate()
         }
     private var radius = 0F
@@ -83,21 +89,28 @@ class StatsView @JvmOverloads constructor(
             return
         }
         var startAngle = -90F
-        val sumData = data.sum()
-        data = data.map { it / sumData }
+        println(data)
         var colorDot = 0
+        // pain circle back
+        paint.color = colorBack
+        canvas.drawCircle(center.x, center.y, radius, paint)
+        // paint arcs
+        println(data.size)
         data.forEachIndexed { index, datum ->
             val angle = datum * 360F
             paint.color = colors.getOrElse(index) { generateRandomColor() }
-            if (index == 0) {
+            if (index == 0 && sumData == data.sum()) {
                 colorDot = paint.color
             }
             canvas.drawArc(oval, startAngle, angle, false, paint)
             startAngle += angle
+            println(startAngle)
         }
-        paint.color = colorDot
-        canvas.drawPoint(center.x,center.y - radius, paint)
-        //canvas.drawCircle(center.x, center.y, radius, paint)
+        if (colorDot != 0) {
+            println(colorDot)
+            paint.color = colorDot
+            canvas.drawPoint(center.x, center.y - radius, paint)
+        }
         canvas.drawText(
             "%.2f%%".format(data.sum() * 100),
             center.x,

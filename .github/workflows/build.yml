@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master, 05_views_Task_#1_Smart_StatsView ]
+    branches: [ master, 05_views_Task_#2_Dot ]
 
 jobs:
   build:
