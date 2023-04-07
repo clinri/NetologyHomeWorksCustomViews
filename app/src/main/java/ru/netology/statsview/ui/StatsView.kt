@@ -71,7 +71,7 @@ class StatsView @JvmOverloads constructor(
                 progress = anim.animatedValue as Float
                 invalidate()
             }
-            duration = 3000
+            duration = 2000
             interpolator = LinearInterpolator()
         }.also {
             it.start()
@@ -128,7 +128,7 @@ class StatsView @JvmOverloads constructor(
             if (index == 0 && sumData == data.sum()) {
                 colorDot = paint.color
             }
-            canvas.drawArc(oval, startAngle, angle * progress, false, paint)
+            canvas.drawArc(oval, startAngle + 360F * progress, angle * progress, false, paint)
             startAngle += angle
             println(startAngle)
         }
