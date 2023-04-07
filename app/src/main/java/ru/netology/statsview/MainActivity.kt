@@ -15,9 +15,9 @@ class MainActivity : AppCompatActivity() {
         view.data = listOf(
             2000F, // max value
             500F,
-            100F,
-            410F,
-            120F
+            500F,
+            500F,
+            500F
         )
 
         val textView = findViewById<TextView>(R.id.label)

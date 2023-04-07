@@ -1,5 +1,6 @@
 package ru.netology.statsview.ui
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -7,6 +8,7 @@ import android.graphics.PointF
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.core.content.withStyledAttributes
 import ru.netology.statsview.R
 import ru.netology.statsview.utils.AndroidUtils
@@ -44,14 +46,38 @@ class StatsView @JvmOverloads constructor(
         }
     }
 
+    private var progress = 0F
+    private var valueAnimator: ValueAnimator? = null
+
+
     var data: List<Float> = emptyList()
         set(value) {
             sumData = value[0]
             field = value.filterIndexed(fun(index: Int, _) = index != 0).map {
                 it / sumData
             }
-            invalidate()
+            update()
         }
+
+    private fun update() {
+        valueAnimator?.let {
+            it.removeAllListeners()
+            it.cancel()
+        }
+        progress = 0F
+
+        valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
+            addUpdateListener { anim ->
+                progress = anim.animatedValue as Float
+                invalidate()
+            }
+            duration = 3000
+            interpolator = LinearInterpolator()
+        }.also {
+            it.start()
+        }
+    }
+
     private var radius = 0F
     private var center = PointF()
     private var oval = RectF()
@@ -102,7 +128,7 @@ class StatsView @JvmOverloads constructor(
             if (index == 0 && sumData == data.sum()) {
                 colorDot = paint.color
             }
-            canvas.drawArc(oval, startAngle, angle, false, paint)
+            canvas.drawArc(oval, startAngle, angle * progress, false, paint)
             startAngle += angle
             println(startAngle)
         }
