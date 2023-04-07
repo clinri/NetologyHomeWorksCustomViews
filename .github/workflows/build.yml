@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master, 05_views_Task_#2_Dot ]
+    branches: [ master, 06_animations_code_from_lecture ]
 
 jobs:
   build:
